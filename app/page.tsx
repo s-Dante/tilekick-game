@@ -1,65 +1,86 @@
 import Image from "next/image";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import { FeaturedCard } from "@/components/index";
+import { UsersRound, Globe, UserRound, Bot, ChartBarIncreasing } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main id="main-content" className="w-full mx-auto flex-1 flex flex-col py-10">
+      <section className="flex-1 flex flex-col items-center gap-8 mt-10">
+
+        {/* --- CABECERA (Título y Subtítulo) --- */}
+        <div className="flex flex-col items-center gap-4">
+          <h1
+            className="text-center animate-fade-up font-extrabold tracking-tight sm:text-7xl md:text-8xl lg:text-9xl uppercase"
+            style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
+          >
+            Tilekick
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <span
+            className="text-center animate-fade-up text-xl text-muted-foreground sm:text-2xl md:text-3xl"
+            style={{ animationDelay: "0.35s", animationFillMode: "forwards" }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Arma tu estrategia y {" "}
+            <span className="text-primary bg-primary/10 rounded-sm px-2 font-medium">Gana</span>
+            {" "}el torneo
+          </span>
         </div>
-      </main>
-    </div>
+
+        {/* --- BOTÓN --- */}
+        <div
+          className="animate-fade-up flex items-center gap-4"
+          style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}
+        >
+          <Link
+            href="/login"
+            className={cn(buttonVariants({ variant: "default", size: "lg" }), "cursor-pointer h-12 w-auto text-2xl")}
+          >
+            Jugar Ahora
+          </Link>
+        </div>
+
+        <div
+          className="w-full grid grid-cols-1 sm:grid-cols-4 gap-4 animate-fade-up mt-8 px-10"
+          style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}
+        >
+          <FeaturedCard
+            icon1={<UsersRound size={20} />}
+            icon2={<Globe size={20} />}
+            title="Multijugador Online"
+            description="Desafía a jugadores de todo el mundo."
+            content="Compite en ligas globales o crea salas privadas para jugar con amigos."
+          />
+
+          <FeaturedCard
+            icon1={<UserRound size={20} />}
+            icon2={<UserRound size={20} />}
+            title="Multijugador Local"
+            description="Juega contra tus amigos en un mismo dispositivo"
+            content="Desafía a tus amigos en partidas rápidas o torneos locales."
+            footer="Pass & Play"
+          />
+
+          <FeaturedCard
+            icon1={<UserRound size={20} />}
+            icon2={<Bot size={20} />}
+            title="Clasificatorias"
+            description="SPerfecciona tu táctica contra la IA."
+            content="Enfrenta a bots de distintas dificultades para probar nuevas estrategias antes del torneo."
+            footer="Práctica offline"
+          />
+
+          <FeaturedCard
+            icon1={<UserRound size={20} />}
+            icon2={<ChartBarIncreasing size={20} />}
+            title="Rankings"
+            description="Compara tu nivel con el resto."
+            content="Compite en ligas globales o crea salas privadas para jugar con amigos."
+            footer="Datos en tiempo real"
+          />
+        </div>
+      </section>
+    </main>
   );
 }
