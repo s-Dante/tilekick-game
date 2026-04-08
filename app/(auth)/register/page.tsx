@@ -1,3 +1,5 @@
+"use client";
+
 import {
     Button,
     Input,
@@ -9,6 +11,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface RegisterInputs {
     username: string;
@@ -22,8 +25,19 @@ export default function RegisterPage() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    const onSubmit: SubmitHandler<RegisterInputs> = (data) => {
-        console.log(data);
+    const onSubmit: SubmitHandler<RegisterInputs> = async (data) => {
+        setLoading(true);
+        try {
+            const res = await axios.post("/api/auth/register", data)
+            toast.success("Tu cuenta se creo exitosamente", { position: "top-center" })
+            router.push("/login")
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data.message, { position: "top-center" })
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     const onError = () => {

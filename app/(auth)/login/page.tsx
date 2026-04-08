@@ -11,6 +11,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { signIn } from "next-auth/react";
 
 interface LoginInputs {
     email: string;
@@ -20,9 +22,29 @@ interface LoginInputs {
 export default function LoginPage() {
     const { register, handleSubmit, formState: { errors } } = useForm<LoginInputs>();
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
-    const onSubmit: SubmitHandler<LoginInputs> = (data) => {
-        console.log(data);
+    const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+        setLoading(true);
+        try {
+            const res = await signIn('credentials', {
+                email: data.email,
+                password: data.password,
+                redirect: false,
+            })
+
+            if (res?.ok) {
+                router.push("/home");
+                router.refresh();
+            } else {
+                toast.error(res?.error, { position: "top-center" })
+            }
+
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const onError = () => {
