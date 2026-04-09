@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { signIn } from "next-auth/react";
 
 interface RegisterInputs {
     username: string;
@@ -29,8 +30,19 @@ export default function RegisterPage() {
         setLoading(true);
         try {
             const res = await axios.post("/api/auth/register", data)
-            toast.success("Tu cuenta se creo exitosamente", { position: "top-center" })
-            router.push("/login")
+            if (res.status === 201) {
+                toast.success("Tu cuenta se creo exitosamente", { position: "top-center" })
+                const result = await signIn("credentials", {
+                    email: data.email,
+                    password: data.password,
+                    redirect: false,
+                })
+                if (!result?.ok) {
+                    toast.error("Error al iniciar sesion", { position: "top-center" })
+                }
+                router.push("/home")
+                console.log(result);
+            }
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 toast.error(error.response?.data.message, { position: "top-center" })

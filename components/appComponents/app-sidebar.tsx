@@ -8,26 +8,69 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    NavUser,
+    NavMain,
+    NavFooter
 } from "@/components/index"
-import { HomeIcon } from "lucide-react";
+import {
+    ChartColumnIncreasingIcon,
+    SwordsIcon,
+    CogIcon,
+} from "lucide-react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
+const navData = {
+    navMainItems: [
+        {
+            title: "Jugar",
+            url: "/play",
+            icon: SwordsIcon
+        },
+        {
+            title: "Ranking",
+            url: "/ranking",
+            icon: ChartColumnIncreasingIcon
+        }
+    ],
+    navFooterItems: [
+        {
+            title: "Ajustes",
+            url: "/settings",
+            icon: CogIcon
+        },
+    ],
+}
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const { data: session } = useSession();
+    const user = session?.user;
+
     return (
         <Sidebar collapsible="offcanvas" {...props}>
-            <SidebarHeader>
+            <SidebarHeader className="py-6 border-b border-sidebar-border">
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton
-                            asChild
-                            className="data-[slot=sidebar-menu-button]:p-1.5! items-center"
-                        >
-                            <a href="#">
-                                <span className="font-bold uppercase text-xl text-primary">Tilekick</span>
-                            </a>
-                        </SidebarMenuButton>
+                        <div className="flex flex-col items-center justify-center w-full">
+                            <Link href="/home" className="flex items-center justify-center">
+                                <span
+                                    className="font-extrabold uppercase text-3xl tracking-widest text-primary drop-shadow-sm"
+                                >
+                                    Tilekick
+                                </span>
+                            </Link>
+                        </div>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
+
+            <SidebarContent className="gap-6">
+                <NavMain items={navData.navMainItems} />
+                <NavFooter items={navData.navFooterItems} className="mt-auto" />
+            </SidebarContent>
+
+            <SidebarFooter>
+                <NavUser user={user} />
+            </SidebarFooter>
         </Sidebar>
     )
 }

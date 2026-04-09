@@ -17,8 +17,30 @@ export async function POST(request: Request) {
         const salt = await bcrypt.genSalt(11)
         userData.password = await bcrypt.hash(userData.password, salt)
 
-        const newUser = await prisma.user.create({
-            data: userData
+        const newUser = await prisma.$transaction(async (tx) => {
+            const user = await tx.user.create({
+                data: userData
+            });
+
+            await tx.userStats.create({
+                data: {
+                    id: crypto.randomUUID(),
+                    userId: user.id,
+                    rating: 1011,
+                    peakRating: 1011,
+                    updatedAt: new Date(),
+                }
+            });
+
+            await tx.userPreferences.create({
+                data: {
+                    id: crypto.randomUUID(),
+                    userId: user.id,
+                    updatedAt: new Date(),
+                }
+            });
+
+            return user;
         });
 
         const { password, ...userWithoutPassword } = newUser;
